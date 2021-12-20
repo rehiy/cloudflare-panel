@@ -7,10 +7,14 @@ if (!isset($adapter)) {
 	exit;
 }
 
+$zoneId = $_GET['zoneid'] ?? '';
+$zoneName = $_GET['domain'] ?? '';
+$recordId = $_GET['recordid'] ?? '';
+
 $dns = new \Cloudflare\API\Endpoints\DNS($adapter);
 
 try {
-	$dns_details = $dns->getRecordDetails($_GET['zoneid'], $_GET['recordid']);
+	$dns_details = $dns->getRecordDetails($zoneId, $recordId);
 } catch (Exception $e) {
 	echo '<p class="alert alert-danger" role="alert">' . $e->getMessage() . '</p>';
 	return;
@@ -45,7 +49,7 @@ if (isset($_POST['submit'])) {
 	include __DIR__ . '/record_data.php';
 
 	try {
-		if ($dns->updateRecordDetails($_GET['zoneid'], $_GET['recordid'], $options)) {
+		if ($dns->updateRecordDetails($zoneId, $recordId, $options)) {
 			echo '<p class="alert alert-success" role="alert">' . l('Success') . '</p>';
 		} else {
 			echo '<p class="alert alert-danger" role="alert">' . l('Failed') . '</p>';
@@ -57,7 +61,7 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-<strong><?php echo '<h1 class="h5"><a href="?action=zone&domain=' . $_GET['domain'] . '&zoneid=' . $_GET['zoneid'] . '">&lt;- ' . l('Back') . '</a></h1>'; ?></strong>
+<strong><?php echo '<h1 class="h5"><a href="?action=zone&domain=' . $zoneName . '&zoneid=' . $zoneId . '">&lt;- ' . l('Back') . '</a></h1>'; ?></strong>
 
 <hr>
 

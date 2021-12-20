@@ -7,14 +7,14 @@ if (!isset($adapter)) {
 	exit;
 }
 
-$zoneID = $_GET['zoneid'];
-$zone_name = $_GET['domain'];
+$zoneId = $_GET['zoneid'] ?? '';
+$zoneName = $_GET['domain'] ?? '';
 
 $dns = new Cloudflare\API\Endpoints\DNS($adapter);
 $zones = new Cloudflare\API\Endpoints\Zones($adapter);
 ?>
 
-<strong><?php echo '<h1 class="h5"><a href="?action=security&domain=' . $zone_name . '&zoneid=' . $zoneID . '">' . strtoupper($zone_name) . '</a></h1>'; ?></strong>
+<strong><?php echo '<h1 class="h5"><a href="?action=security&domain=' . $zoneName . '&zoneid=' . $zoneId . '">' . strtoupper($zoneName) . '</a></h1>'; ?></strong>
 
 <hr>
 
@@ -22,7 +22,7 @@ $zones = new Cloudflare\API\Endpoints\Zones($adapter);
 	<h3 id="ssl" class="mt-5 mb-3"><?php echo l('SSL Verify'); ?></h3>
 	<?php
 	try {
-		$sslverify = $adapter->get('zones/' . $zoneID . '/ssl/verification?retry=true');
+		$sslverify = $adapter->get('zones/' . $zoneId . '/ssl/verification?retry=true');
 		$sslverify = json_decode($sslverify->getBody(), true)['result'];
 	} catch (Exception $e) {
 		$sslverify[0]['validation_method'] = 'http';
@@ -97,7 +97,7 @@ $zones = new Cloudflare\API\Endpoints\Zones($adapter);
 	echo '<p>' . l('This feature is designed for users who use Cloudflare DNS setup. If you are using third-party DNS services, do not turn it on nor add DS record, otherwise your domain may become inaccessible.') . '</p>';
 
 	try {
-		$dnssec = $adapter->get('zones/' . $zoneID . '/dnssec');
+		$dnssec = $adapter->get('zones/' . $zoneId . '/dnssec');
 		$dnssec = json_decode($dnssec->getBody());
 	} catch (Exception $e) {
 		echo '<p class="alert alert-danger" role="alert">' . $e->getMessage() . '</p>';
@@ -106,13 +106,13 @@ $zones = new Cloudflare\API\Endpoints\Zones($adapter);
 
 	if ($dnssec->result->status == 'active') {
 		echo '<p style="color:green;">' . l('Activated') . '</p><p>DS：<code>' . $dnssec->result->ds . '</code></p><p>Public Key：<code>' . $dnssec->result->public_key . '</code></p>';
-		echo '<p><a href="?action=dnssec&zoneid=' . $zoneID . '&domain=' . $zone_name . '&do=disabled">' . l('Deactivate') . '</a></p>';
+		echo '<p><a href="?action=dnssec&zoneid=' . $zoneId . '&domain=' . $zoneName . '&do=disabled">' . l('Deactivate') . '</a></p>';
 	} elseif ($dnssec->result->status == 'pending') {
 		echo '<p style="color:orange;">' . l('Pending') . '</p><p>DS：<code>' . $dnssec->result->ds . '</code></p><p>Public Key：<code>' . $dnssec->result->public_key . '</code></p>';
-		echo '<p><a href="?action=dnssec&zoneid=' . $zoneID . '&domain=' . $zone_name . '&do=disabled">' . l('Deactivate') . '</a></p>';
+		echo '<p><a href="?action=dnssec&zoneid=' . $zoneId . '&domain=' . $zoneName . '&do=disabled">' . l('Deactivate') . '</a></p>';
 	} else {
 		echo '<p style="color:red;">' . l('Not Activated') . '</p>';
-		echo '<p><a href="?action=dnssec&zoneid=' . $zoneID . '&domain=' . $zone_name . '&do=active" onclick="return confirm(\'' . l('This feature is designed for users who use Cloudflare DNS setup. If you are using third-party DNS services, do not turn it on nor add DS record, otherwise your domain may become inaccessible.') . '\')">' . l('Activate') . '</a></p>';
+		echo '<p><a href="?action=dnssec&zoneid=' . $zoneId . '&domain=' . $zoneName . '&do=active" onclick="return confirm(\'' . l('This feature is designed for users who use Cloudflare DNS setup. If you are using third-party DNS services, do not turn it on nor add DS record, otherwise your domain may become inaccessible.') . '\')">' . l('Activate') . '</a></p>';
 	}
 	?>
 </div>

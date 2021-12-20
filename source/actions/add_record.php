@@ -7,6 +7,9 @@ if (!isset($adapter)) {
 	exit;
 }
 
+$zoneId = $_GET['zoneid'] ?? '';
+$zoneName = $_GET['domain'] ?? '';
+
 if (isset($_POST['submit'])) {
 	if ($_POST['proxied'] == 'false') {
 		$_POST['proxied'] = false;
@@ -32,12 +35,12 @@ if (isset($_POST['submit'])) {
 	}
 
 	try {
-		$dns = $adapter->post('zones/' . $_GET['zoneid'] . '/dns_records', $options);
+		$dns = $adapter->post('zones/' . $zoneId . '/dns_records', $options);
 		$dns = json_decode($dns->getBody());
 		if (isset($dns->result->id)) {
-			echo '<p class="alert alert-success" role="alert">' . l('Success') . ', <a href="?action=add_record&zoneid=' . $_GET['zoneid'] . '&domain=' . $_GET['domain'] . '">' . l('Add New Record') . '</a>, ' . l('Or') . '<a href="?action=zone&domain=' . $_GET['domain'] . '&zoneid=' . $_GET['zoneid'] . '">' . l('Go to console') . '</a></p>';
+			echo '<p class="alert alert-success" role="alert">' . l('Success') . ', <a href="?action=add_record&zoneid=' . $zoneId . '&domain=' . $zoneName . '">' . l('Add New Record') . '</a>, ' . l('Or') . '<a href="?action=zone&domain=' . $zoneName . '&zoneid=' . $zoneId . '">' . l('Go to console') . '</a></p>';
 		} else {
-			echo '<p class="alert alert-danger" role="alert">' . l('Failed') . ', <a href="?action=add_record&zoneid=' . $_GET['zoneid'] . '&domain=' . $_GET['domain'] . '">' . l('Add New Record') . '</a>, ' . l('Or') . '<a href="?action=zone&domain=' . $_GET['domain'] . '&zoneid=' . $_GET['zoneid'] . '">' . l('Go to console') . '</a></p>';
+			echo '<p class="alert alert-danger" role="alert">' . l('Failed') . ', <a href="?action=add_record&zoneid=' . $zoneId . '&domain=' . $zoneName . '">' . l('Add New Record') . '</a>, ' . l('Or') . '<a href="?action=zone&domain=' . $zoneName . '&zoneid=' . $zoneId . '">' . l('Go to console') . '</a></p>';
 		}
 		return;
 	} catch (Exception $e) {
@@ -47,7 +50,7 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-<strong><?php echo '<h1 class="h5"><a href="?action=zone&domain=' . $_GET['domain'] . '&zoneid=' . $_GET['zoneid'] . '">&lt;- ' . l('Back') . '</a></h1>'; ?></strong>
+<strong><?php echo '<h1 class="h5"><a href="?action=zone&domain=' . $zoneName . '&zoneid=' . $zoneId . '">&lt;- ' . l('Back') . '</a></h1>'; ?></strong>
 
 <hr>
 

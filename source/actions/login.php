@@ -26,7 +26,7 @@ if (isset($_POST['submit'])) {
 	</h1>
 	<input type="email" name="cf_email" class="form-control" placeholder="<?php echo l('Your email address on cloudflare.com'); ?>" required autofocus>
 	<input type="password" name="cf_api_key" class="form-control" minlength="37" maxlength="37" pattern="[0-9a-fA-F]{37}" title="<?php echo l('Your global API key. NOT your password.'); ?>" placeholder="<?php echo l('Your global API key on cloudflare.com'); ?>" required>
-	<button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo l('Sign in'); ?></button>
+	<button type="submit" name="submit" class="btn btn-lg btn-primary btn-block"><?php echo l('Sign in'); ?></button>
 	<p class="mt-3 text-muted">
 		<a href="https://support.cloudflare.com/hc/en-us/articles/200167836-Managing-API-Tokens-and-Keys#12345682">
 			<?php echo l('How to get my global API key?'); ?>

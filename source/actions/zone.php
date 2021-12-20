@@ -7,22 +7,26 @@ if (!isset($adapter)) {
 	exit;
 }
 
-$_GET['page'] = intval($_GET['page'] ?? 1);
+$zoneId = $_GET['zoneid'] ?? '';
+$zoneName = $_GET['domain'] ?? '';
 
-$zoneID = $_GET['zoneid'];
+$page = intval($_GET['page'] ?? 1);
+
+$enable = $_GET['enable'] ?? null;
+$disable = $_GET['disable'] ?? null;
 
 $dns = new Cloudflare\API\Endpoints\DNS($adapter);
 $zones = new Cloudflare\API\Endpoints\Zones($adapter);
 
 try {
-	$dnsresult_data = $dns->listRecords($zoneID, false, false, false, $_GET['page']);
+	$dnsresult_data = $dns->listRecords($zoneId, false, false, false, $page);
 } catch (Exception $e) {
 	echo '<p class="alert alert-danger" role="alert">' . $e->getMessage() . '</p>';
 	return;
 }
 
 $dnsresult = $dnsresult_data->result;
-$zone_name = htmlspecialchars($_GET['domain']);
+$zone_name = htmlspecialchars($zoneName);
 
 foreach ($dnsresult as $record) {
 	$zone_name = $record->zone_name;
@@ -35,30 +39,30 @@ foreach ($dnsresult as $record) {
 }
 ?>
 
-<strong><?php echo '<h1 class="h5"><a href="?action=zone&domain=' . $zone_name . '&zoneid=' . $zoneID . '">' . strtoupper($zone_name) . '</a></h1>'; ?></strong>
+<strong><?php echo '<h1 class="h5"><a href="?action=zone&domain=' . $zone_name . '&zoneid=' . $zoneId . '">' . strtoupper($zone_name) . '</a></h1>'; ?></strong>
 
 <hr>
 
 <?php
 /* Toggle the CDN */
-if (isset($_GET['enable']) && !$dnsproxyied[$_GET['enable']]) {
-	if ($dns->updateRecordDetails($zoneID, $_GET['enable'], ['type' => $dnstype[$_GET['enable']], 'content' => $dnscontent[$_GET['enable']], 'name' => $dnsname[$_GET['enable']], 'proxied' => true])->success == true) {
+if (isset($enable) && !$dnsproxyied[$enable]) {
+	if ($dns->updateRecordDetails($zoneId, $enable, ['type' => $dnstype[$enable], 'content' => $dnscontent[$enable], 'name' => $dnsname[$enable], 'proxied' => true])->success == true) {
 		echo '<p class="alert alert-success" role="alert">' . l('Success') . '! </p>';
 	} else {
-		echo '<p class="alert alert-danger" role="alert">' . l('Failed') . '! </p><p><a href="?action=zone&domain=' . $zone_name . '&zoneid=' . $zoneID . '">' . l('Go to console') . '</a></p>';
+		echo '<p class="alert alert-danger" role="alert">' . l('Failed') . '! </p><p><a href="?action=zone&domain=' . $zone_name . '&zoneid=' . $zoneId . '">' . l('Go to console') . '</a></p>';
 		return;
 	}
 } else {
-	$_GET['enable'] = 1;
-	if (isset($_GET['disable']) && $dnsproxyied[$_GET['disable']]) {
-		if ($dns->updateRecordDetails($zoneID, $_GET['disable'], ['type' => $dnstype[$_GET['disable']], 'content' => $dnscontent[$_GET['disable']], 'name' => $dnsname[$_GET['disable']], 'proxied' => false])->success == true) {
+	$enable = 1;
+	if (isset($disable) && $dnsproxyied[$disable]) {
+		if ($dns->updateRecordDetails($zoneId, $disable, ['type' => $dnstype[$disable], 'content' => $dnscontent[$disable], 'name' => $dnsname[$disable], 'proxied' => false])->success == true) {
 			echo '<p class="alert alert-success" role="alert">' . l('Success!') . '</p>';
 		} else {
-			echo '<p class="alert alert-danger" role="alert">' . l('Failed') . '! </p><p><a href="?action=zone&domain=' . $zone_name . '&zoneid=' . $zoneID . '">' . l('Go to console') . '</a></p>';
+			echo '<p class="alert alert-danger" role="alert">' . l('Failed') . '! </p><p><a href="?action=zone&domain=' . $zone_name . '&zoneid=' . $zoneId . '">' . l('Go to console') . '</a></p>';
 			return;
 		}
 	} else {
-		$_GET['disable'] = 1;
+		$disable = 1;
 	}
 }
 ?>
@@ -77,7 +81,7 @@ if (isset($_GET['enable']) && !$dnsproxyied[$_GET['enable']]) {
 	</div>
 </div>
 <h3 class="mt-5 mb-3" id="dns"><?php echo l('DNS Management'); ?>
-	<a class="btn btn-primary float-sm-right d-block mt-3 mt-sm-0" href='?action=add_record&zoneid=<?php echo $zoneID; ?>&domain=<?php echo $zone_name; ?>'><?php echo l('Add New Record'); ?></a>
+	<a class="btn btn-primary float-sm-right d-block mt-3 mt-sm-0" href='?action=add_record&zoneid=<?php echo $zoneId; ?>&domain=<?php echo $zone_name; ?>'><?php echo l('Add New Record'); ?></a>
 </h3>
 <table class="table table-striped">
 	<thead>
@@ -95,17 +99,17 @@ if (isset($_GET['enable']) && !$dnsproxyied[$_GET['enable']]) {
 		foreach ($dnsresult as $record) {
 			if ($record->proxiable) {
 				if ($record->proxied) {
-					$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&disable=' . $record->id . '&page=' . $_GET['page'] . '&zoneid=' . $zoneID . '"><img src="assets/cloud_on.png" height="30"></a>';
+					$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&disable=' . $record->id . '&page=' . $page . '&zoneid=' . $zoneId . '"><img src="assets/cloud_on.png" height="30"></a>';
 				} else {
-					$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&enable=' . $record->id . '&page=' . $_GET['page'] . '&zoneid=' . $zoneID . '"><img src="assets/cloud_off.png" height="30"></a>';
+					$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&enable=' . $record->id . '&page=' . $page . '&zoneid=' . $zoneId . '"><img src="assets/cloud_off.png" height="30"></a>';
 				}
 			} else {
 				$proxiable = '<img src="assets/cloud_off.png" height="30">';
 			}
-			if (isset($_GET['enable']) && $record->id === $_GET['enable']) {
-				$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&disable=' . $record->id . '&page=' . $_GET['page'] . '&zoneid=' . $zoneID . '"><img src="assets/cloud_on.png" height="30"></a>';
-			} elseif (isset($_GET['disable']) && $record->id === $_GET['disable']) {
-				$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&enable=' . $record->id . '&page=' . $_GET['page'] . '&zoneid=' . $zoneID . '"><img src="assets/cloud_off.png" height="30"></a>';
+			if (isset($enable) && $record->id === $enable) {
+				$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&disable=' . $record->id . '&page=' . $page . '&zoneid=' . $zoneId . '"><img src="assets/cloud_on.png" height="30"></a>';
+			} elseif (isset($disable) && $record->id === $disable) {
+				$proxiable = '<a href="?action=zone&domain=' . $zone_name . '&enable=' . $record->id . '&page=' . $page . '&zoneid=' . $zoneId . '"><img src="assets/cloud_off.png" height="30"></a>';
 			}
 			if ($record->type == 'MX') {
 				$priority = '<code>' . $record->priority . '</code> ';
@@ -131,8 +135,8 @@ if (isset($_GET['enable']) && !$dnsproxyied[$_GET['enable']]) {
 						' . l('Manage') . '
 						</button>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="?action=edit_record&domain=' . $zone_name . '&recordid=' . $record->id . '&zoneid=' . $zoneID . '">' . l('Edit') . '</a>
-							<a class="dropdown-item" href="?action=delete_record&domain=' . $zone_name . '&delete=' . $record->id . '&zoneid=' . $zoneID . '" onclick="return confirm(\'' . l('Are you sure to delete') . ' ' . htmlspecialchars($record->name) . '?\')">' . l('Delete') . '</a>
+							<a class="dropdown-item" href="?action=edit_record&domain=' . $zone_name . '&recordid=' . $record->id . '&zoneid=' . $zoneId . '">' . l('Edit') . '</a>
+							<a class="dropdown-item" href="?action=delete_record&domain=' . $zone_name . '&delete=' . $record->id . '&zoneid=' . $zoneId . '" onclick="return confirm(\'' . l('Are you sure to delete') . ' ' . htmlspecialchars($record->name) . '?\')">' . l('Delete') . '</a>
 						</div>
 					</div>
 					<div class="d-block d-md-none">' . l('TTL') . ' ' . $ttl . '</div>
@@ -141,8 +145,8 @@ if (isset($_GET['enable']) && !$dnsproxyied[$_GET['enable']]) {
 				<td class="d-none d-md-table-cell">' . $ttl . '</td>
 				<td class="d-none d-md-table-cell" style="width: 200px;">' . $proxiable . ' |
 					<div class="btn-group" role="group">
-						<a class="btn btn-dark btn-sm" href="?action=edit_record&domain=' . $zone_name . '&recordid=' . $record->id . '&zoneid=' . $zoneID . '">' . l('Edit') . '</a>
-						<a class="btn btn-danger btn-sm" href="?action=delete_record&domain=' . $zone_name . '&delete=' . $record->id . '&zoneid=' . $zoneID . '" onclick="return confirm(\'' . l('Are you sure to delete') . ' ' . htmlspecialchars($record->name) . '?\')">' . l('Delete') . '</a>
+						<a class="btn btn-dark btn-sm" href="?action=edit_record&domain=' . $zone_name . '&recordid=' . $record->id . '&zoneid=' . $zoneId . '">' . l('Edit') . '</a>
+						<a class="btn btn-danger btn-sm" href="?action=delete_record&domain=' . $zone_name . '&delete=' . $record->id . '&zoneid=' . $zoneId . '" onclick="return confirm(\'' . l('Are you sure to delete') . ' ' . htmlspecialchars($record->name) . '?\')">' . l('Delete') . '</a>
 					</div>
 				</td>
 			</tr>
@@ -161,11 +165,11 @@ if (isset($dnsresult_data->result_info->total_pages)) {
 	$previous_page = $next_page = '';
 	if ($dnsresult_data->result_info->page < $dnsresult_data->result_info->total_pages) {
 		$page_link = $dnsresult_data->result_info->page + 1;
-		$next_page = ' | <a href="?action=zone&domain=' . $zone_name . '&page=' . $page_link . '&zoneid=' . $zoneID . '">' . l('Next') . '</a>';
+		$next_page = ' | <a href="?action=zone&domain=' . $zone_name . '&page=' . $page_link . '&zoneid=' . $zoneId . '">' . l('Next') . '</a>';
 	}
 	if ($dnsresult_data->result_info->page > 1) {
 		$page_link = $dnsresult_data->result_info->page - 1;
-		$previous_page = '<a href="?action=zone&domain=' . $zone_name . '&page=' . $page_link . '&zoneid=' . $zoneID . '">' . l('Previous') . '</a> | ';
+		$previous_page = '<a href="?action=zone&domain=' . $zone_name . '&page=' . $page_link . '&zoneid=' . $zoneId . '">' . l('Previous') . '</a> | ';
 	}
 	echo '<p>' . $previous_page . l('Page') . ' ' . $dnsresult_data->result_info->page . '/' . $dnsresult_data->result_info->total_pages . $next_page . '</p>';
 }
