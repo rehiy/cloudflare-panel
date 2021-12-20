@@ -70,10 +70,10 @@ require_once __DIR__ . '/source/common.php';
 	</main>
 
 	<footer class="footer">
-		<?php
-		$time = round(microtime(true) - $starttime, 3);
-		echo '<small><p>Load time: ' . $time . 's </p>';
-		?>
+		<p>
+			<small>Report bug to <a href="https://github.com/rehiy/cloudflare-panel" target="_blank">rehiy/cloudflare-panel</a></small>
+			<small>, Load time: <?php echo floor((microtime(true) - $starttime) * 1000); ?> ms </small>
+		</p>
 	</footer>
 
 	<script src="vendor/components/jquery/jquery.slim.min.js"></script>
