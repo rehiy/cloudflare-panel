@@ -1,6 +1,6 @@
 <?php
 
-return [
+$translates = [
     'Success' => '成功',
     'Go to console' => '前往管理中心',
     'Domain' => '域名',

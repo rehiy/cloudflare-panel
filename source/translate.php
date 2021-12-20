@@ -1,6 +1,8 @@
 <?php
 
-$translates = include(__DIR__ . '/translate/zh-cn.php');
+$translates = [];
+
+include __DIR__ . '/translate/zh-cn.php';
 
 function l($k)
 {
