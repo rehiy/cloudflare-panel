@@ -32,8 +32,8 @@ try {
 	<tbody>
 		<?php
 		foreach ($zones_data->result as $zone) {
-			if (!empty($_ENV['zonelist'])) {
-				if (!in_array($zone->name, $_ENV['zonelist'])) {
+			if (!empty($_ENV['va.zonelist'])) {
+				if (!in_array($zone->name, $_ENV['va.zonelist'])) {
 					continue; // support for vaccount
 				}
 			}
