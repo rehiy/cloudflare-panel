@@ -19,7 +19,7 @@ if (empty($_COOKIE['cf_email']) || empty($_COOKIE['cf_api_key'])) {
 $cf_email = $_COOKIE['cf_email'] ?? $_POST['cf_email'] ?? '';
 $cf_api_key = $_COOKIE['cf_api_key'] ??  $_POST['cf_api_key'] ?? '';
 
-if (is_file(__DIR__ . '/vaccount/caller.php')) {
+if (is_file(__DIR__ . '/vaccount/config.php')) {
     require_once __DIR__ . '/vaccount/caller.php';
 }
 

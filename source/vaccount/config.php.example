@@ -1,0 +1,11 @@
+<?php
+
+$va_list['cfp@sub.account'] = [
+    'cf_email' => 'real@cf.account',
+    'cf_api_key' => 'cf-global-api-key',
+    'sub_key' => 'md5(37-letters-[0-9a-f])',
+    'sub_zone' => [
+        'example.com' => 'cf-zone-id',
+        'example.net' => 'cf-zone-id',
+    ],
+];
