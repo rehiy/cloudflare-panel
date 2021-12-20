@@ -2,12 +2,14 @@
 
 $translates = [];
 
-include __DIR__ . '/translate/zh-cn.php';
-
 function l($k)
 {
     global $translates;
     return $translates[$k] ?? $k;
+}
+
+if (preg_match('/^zh/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    include __DIR__ . '/translate/zh-cn.php';
 }
 
 $ttl_translate = [
