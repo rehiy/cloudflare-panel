@@ -7,7 +7,7 @@ if (!isset($adapter)) {
     exit;
 }
 
-setcookie('cloudflare_email', null, -1);
-setcookie('cloudflare_key', null, -1);
+setcookie('cf_email', null, -1);
+setcookie('cf_api_key', null, -1);
 
 header('Location: ./');

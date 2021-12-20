@@ -7,16 +7,11 @@ if (!isset($adapter)) {
 	exit;
 }
 
-if (!isset($_GET['page'])) {
-	$_GET['page'] = 1;
-}
-
-$dns = new Cloudflare\API\Endpoints\DNS($adapter);
-$zones = new Cloudflare\API\Endpoints\Zones($adapter);
-
 $zoneID = $_GET['zoneid'];
 $zone_name = $_GET['domain'];
 
+$dns = new Cloudflare\API\Endpoints\DNS($adapter);
+$zones = new Cloudflare\API\Endpoints\Zones($adapter);
 ?>
 
 <strong><?php echo '<h1 class="h5"><a href="?action=security&domain=' . $zone_name . '&zoneid=' . $zoneID . '">' . strtoupper($zone_name) . '</a></h1>'; ?></strong>

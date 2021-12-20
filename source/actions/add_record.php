@@ -30,6 +30,7 @@ if (isset($_POST['submit'])) {
 	if ($_POST['type'] == 'MX') {
 		$options['priority'] = intval($_POST['priority']);
 	}
+
 	try {
 		$dns = $adapter->post('zones/' . $_GET['zoneid'] . '/dns_records', $options);
 		$dns = json_decode($dns->getBody());

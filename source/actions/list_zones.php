@@ -7,14 +7,12 @@ if (!isset($adapter)) {
 	exit;
 }
 
-if (!isset($_GET['page'])) {
-	$_GET['page'] = 1;
-}
+$_GET['page'] = intval($_GET['page'] ?? 1);
 
 $zones = new \Cloudflare\API\Endpoints\Zones($adapter);
 
 try {
-	$zones_data = $zones->listZones(false, false, intval($_GET['page']));
+	$zones_data = $zones->listZones(false, false, $_GET['page']);
 } catch (Exception $e) {
 	echo '<p class="alert alert-danger" role="alert">' . $e->getMessage() . '</p>';
 	return;

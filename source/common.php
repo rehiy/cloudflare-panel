@@ -12,9 +12,17 @@ require_once __DIR__ . '/translate.php';
 
 $action = $_GET['action'] ?? 'list_zones';
 
-if (empty($_COOKIE['cloudflare_email']) || empty($_COOKIE['cloudflare_key'])) {
+if (empty($_COOKIE['cf_email']) || empty($_COOKIE['cf_api_key'])) {
     $action = $_GET['action'] = 'login';
-} else {
-    $key = new \Cloudflare\API\Auth\APIKey($_COOKIE['cloudflare_email'], $_COOKIE['cloudflare_key']);
-    $adapter = new Cloudflare\API\Adapter\Guzzle($key);
 }
+
+if (is_file(__DIR__ . '/vaccount/caller.php')) {
+    require_once __DIR__ . '/vaccount/caller.php';
+}
+
+$key = new \Cloudflare\API\Auth\APIKey(
+    $_COOKIE['cf_email'] ?? $_POST['cf_email'] ?? '',
+    $_COOKIE['cf_api_key'] ??  $_POST['cf_api_key'] ?? ''
+);
+
+$adapter = new Cloudflare\API\Adapter\Guzzle($key);

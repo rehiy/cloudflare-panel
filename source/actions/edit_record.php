@@ -8,7 +8,13 @@ if (!isset($adapter)) {
 }
 
 $dns = new \Cloudflare\API\Endpoints\DNS($adapter);
-$dns_details = $dns->getRecordDetails($_GET['zoneid'], $_GET['recordid']);
+
+try {
+	$dns_details = $dns->getRecordDetails($_GET['zoneid'], $_GET['recordid']);
+} catch (Exception $e) {
+	echo '<p class="alert alert-danger" role="alert">' . $e->getMessage() . '</p>';
+	return;
+}
 
 if (isset($_POST['submit'])) {
 	if (isset($_POST['proxied']) && $_POST['proxied'] == 'true') {

@@ -7,17 +7,15 @@ if (!isset($adapter)) {
 	exit;
 }
 
-if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
-	$_GET['page'] = 1;
-}
+$_GET['page'] = intval($_GET['page'] ?? 1);
+
+$zoneID = $_GET['zoneid'];
 
 $dns = new Cloudflare\API\Endpoints\DNS($adapter);
 $zones = new Cloudflare\API\Endpoints\Zones($adapter);
 
-$zoneID = $_GET['zoneid'];
-
 try {
-	$dnsresult_data = $dns->listRecords($zoneID, false, false, false, intval($_GET['page']));
+	$dnsresult_data = $dns->listRecords($zoneID, false, false, false, $_GET['page']);
 } catch (Exception $e) {
 	echo '<p class="alert alert-danger" role="alert">' . $e->getMessage() . '</p>';
 	return;
