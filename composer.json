@@ -1,0 +1,27 @@
+{
+    "name": "rehiy/cloudflare-panel",
+    "type": "project",
+    "homepage": "https://github.com/rehiy/cloudflare-panel",
+    "description": "Cloudflare Panel",
+    "keywords": [
+        "cloudflare",
+        "cdn"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rehiy",
+            "email": "wang@rehiy.com",
+            "homepage": "https://www.rehiy.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "cloudflare/sdk": "^1.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "pear/net_dns2": "*",
+        "components/jquery": "*",
+        "components/bootstrap": "*"
+    }
+}

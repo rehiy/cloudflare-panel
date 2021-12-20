@@ -1,0 +1,45 @@
+{
+  "name": "components/bootstrap",
+  "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+  "type": "component",
+  "keywords": [
+    "css",
+    "sass",
+    "mobile-first",
+    "responsive",
+    "front-end",
+    "framework",
+    "web"
+  ],
+  "homepage": "https://getbootstrap.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mark Otto",
+      "email": "markdotto@gmail.com"
+    },
+    {
+      "name": "Jacob Thornton",
+      "email": "jacobthornton@gmail.com"
+    }
+  ],
+  "require": {
+    "components/jquery": ">=2"
+  },
+  "extra": {
+    "component": {
+      "scripts": [
+        "js/bootstrap.js"
+      ],
+      "files": [
+        "js/*.js",
+        "js/*.map",
+        "css/*.css",
+        "css/*.map"
+      ],
+      "shim": {
+        "deps": ["jquery"]
+      }
+    }
+  }
+}

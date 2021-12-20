@@ -1,0 +1,27 @@
+{
+  "name": "components-bootstrap",
+  "repo": "components/bootstrap",
+  "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+  "homepage": "https://getbootstrap.com",
+  "version": "4.6.1",
+  "keywords": [
+    "css",
+    "sass",
+    "mobile-first",
+    "responsive",
+    "front-end",
+    "framework",
+    "web"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "components/jquery": "*"
+  },
+  "main": "js/bootstrap.js",
+  "scripts": [
+    "js/bootstrap.js"
+  ],
+  "styles": [
+    "css/bootstrap.css"
+  ]
+}
