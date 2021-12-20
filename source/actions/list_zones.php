@@ -32,6 +32,11 @@ try {
 	<tbody>
 		<?php
 		foreach ($zones_data->result as $zone) {
+			if (!empty($_ENV['zonelist'])) {
+				if (!in_array($zone->name, $_ENV['zonelist'])) {
+					continue; // support for vaccount
+				}
+			}
 			echo '<tr>';
 			$_translate_manage = l('Manage');
 			$_translate_manage_dns = l('Manage DNS');
