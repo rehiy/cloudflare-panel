@@ -1,5 +1,7 @@
 # Cloudflare DNS 管理面板
 
+> 此项目已停止维护，请使用 [TDP Cloud](https://github.com/open-tdp/tdp-cloud) 进行管理
+
 - 此面板使用了 `Cloudflare API v4`，支持管理各种格式的 `DNS` 记录
 
 - 支持管理原 `CNAME` 接入的域名，**不支持添加新域名**
